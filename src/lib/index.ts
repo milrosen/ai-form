@@ -1,1 +1,5 @@
-// place files you want to import through the `$lib` alias in this folder.
+import { createClient } from '@supabase/supabase-js'
+import { env } from '$env/dynamic/private'
+
+export const supabase = createClient('https://qdszsftibozlcagzhiri.supabase.co', env.SUPABASE_ANON_KEY)
+
