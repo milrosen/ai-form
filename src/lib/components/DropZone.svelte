@@ -1,12 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { fromEvent } from "file-selector";
-  import { uploading } from "../../stores";
+  import { loadingTranscription } from "../../stores";
 
   let files: FileList;
-  let loadingBars = false;
 
-  let localState = {
+  let state = {
     displayFile: false,
     file: null,
   } as State;
@@ -18,19 +17,10 @@
 
   $: {
     if (files) {
-      localState.displayFile = true;
-      localState.file = files.item(0);
-    }
-    if ($uploading) {
-      loadingBars = true;
-      console.log(loadingBars);
+      state.displayFile = true;
+      state.file = files.item(0);
     }
   }
-
-  setTimeout(() => {
-    uploading.set(true);
-    console.log("timeout");
-  }, 5000);
 
   function handleEventThen(handleFn: (e: Event) => void) {
     return (event: Event) => {
@@ -43,8 +33,8 @@
   async function handledrop(event: Event) {
     let [f] = await fromEvent(event);
     let file = f as File;
-    localState.file = file;
-    localState.displayFile = true;
+    state.file = file;
+    state.displayFile = true;
   }
 </script>
 
@@ -52,15 +42,16 @@
   method="POST"
   action="?/get_transcript"
   use:enhance={({ formData }) => {
-    if (localState.file == null) {
+    if (state.file == null) {
       throw "no file selected";
     }
-    formData.append("audioFile", localState.file);
+    formData.append("audioFile", state.file);
+    loadingTranscription.set(true);
   }}
 >
   <fieldset
     class="upload_dropzone text-center mb-3 p-4 d-flex flex-column align-items-center"
-    class:loading-file={loadingBars}
+    class:loading-file={$loadingTranscription}
     on:drop={handleEventThen(handledrop)}
     on:dragenter={handleEventThen(() => {})}
     on:dragover={handleEventThen(() => {})}
@@ -72,11 +63,11 @@
     </svg>
 
     <p class="small my-2 width flex-grow-1">
-      {#if !localState.displayFile}
+      {#if !state.displayFile}
         Drag &amp; and drop audio file<br /><i>or</i>
       {:else}
         <div class="text-truncate">
-          {localState.file?.name}
+          {state.file?.name}
         </div>
       {/if}
     </p>
@@ -91,7 +82,7 @@
 
     <div class="mb-3">
       <label class="btn btn-dark btn-upload" for="upload_audio">Browse</label>
-      {#if localState.displayFile}
+      {#if state.displayFile}
         <button class="btn btn-dark btn-upload" type="submit"> Upload </button>
       {/if}
     </div>

@@ -2,10 +2,16 @@
   import DropZone from "$lib/components/DropZone.svelte";
   import Transcript from "$lib/components/Transcript.svelte";
 
-  import { transcribed_text } from "../stores.js";
+  import { transcribedText } from "../stores.js";
+  import { loadingTranscription } from "../stores.js";
+
+  let finishedTranscribing = false;
+
   export let form;
   $: if (form?.transcription) {
-    transcribed_text.set(form.transcription.text);
+    transcribedText.set(form.transcription.text);
+    loadingTranscription.set(false);
+    finishedTranscribing = true;
   }
 </script>
 
@@ -17,7 +23,7 @@
         <DropZone />
       </div>
       <div class="col col-lg">
-        <Transcript text={$transcribed_text} />
+        <Transcript text={$transcribedText} editable={finishedTranscribing} />
       </div>
     </div>
   </div>
