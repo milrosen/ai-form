@@ -1,6 +1,12 @@
 <script lang="ts">
   import DropZone from "$lib/components/DropZone.svelte";
   import Transcript from "$lib/components/Transcript.svelte";
+
+  import { transcribed_text } from "../stores.js";
+  export let form;
+  $: if (form?.transcription) {
+    transcribed_text.set(form.transcription.text);
+  }
 </script>
 
 <div class="m-4">
@@ -11,7 +17,7 @@
         <DropZone />
       </div>
       <div class="col col-lg">
-        <Transcript />
+        <Transcript text={$transcribed_text} />
       </div>
     </div>
   </div>

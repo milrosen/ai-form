@@ -1,6 +1,7 @@
 import { supabase } from "$lib";
 import { redirect, fail } from "@sveltejs/kit";
 
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
 	let session = await supabase.auth.getSession();
