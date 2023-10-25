@@ -4,3 +4,5 @@ import {
 
 export const transcribedText = writable('');
 export const loadingTranscription = writable(false);
+export const loadingParseForm = writable(false);
+export const intakeForm = writable('');

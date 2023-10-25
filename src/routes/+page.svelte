@@ -1,10 +1,11 @@
 <script lang="ts">
+  import AutoForm from "$lib/components/AutoForm.svelte";
   import DropZone from "$lib/components/DropZone.svelte";
   import Transcript from "$lib/components/Transcript.svelte";
 
   import { transcribedText } from "../stores.js";
-  import { loadingTranscription } from "../stores.js";
-  import { parsedForm } from "../stores.js";
+  import { loadingTranscription, loadingParseForm } from "../stores.js";
+  import { intakeForm } from "../stores.js";
 
   export let form;
   $: if (form?.transcription) {
@@ -12,7 +13,8 @@
     loadingTranscription.set(false);
   }
   $: if (form?.responseRaw) {
-    parsedForm.set(form.responseRaw);
+    intakeForm.set(form.responseRaw);
+    loadingParseForm.set(false);
   }
 </script>
 
@@ -27,9 +29,7 @@
         <Transcript text={$transcribedText} />
       </div>
     </div>
+    <AutoForm intakeForm={$intakeForm} />
   </div>
-  <h1>
-    Autocomplete powered by Chat-GPT3, who is a robot not a medical
-    professional. Please triple check all of the boxes
-  </h1>
+  <div />
 </div>
