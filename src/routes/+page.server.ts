@@ -1,10 +1,6 @@
 import { supabase, openai } from "$lib";
 import { redirect } from "@sveltejs/kit";
 
-export const config = {
-	runtime: 'edge',
-}
-
 export async function load() {
 	let session = await supabase.auth.getSession();
 	if (session.data.session === null) {
